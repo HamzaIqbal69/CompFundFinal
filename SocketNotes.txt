@@ -1,0 +1,12 @@
+Use a class to define the client and server
+Can use the encryption class with this
+
+Use pickle.loads to convert a bytearray to an object
+Use pickle.dumps to convert an object to a bytearray
+
+MULTI CONNECTION
+For every client connected to the server, we will create a separate thread that will handle the communication with that client
+The threading module handles this
+
+thread = threading.Thread(target = self.handle_client, args=(conn,))
+thread.start
