@@ -28,7 +28,7 @@ def encode_image(image_location, msg):
           img[i-1][j-1][0] = next(msg_gen)
         except StopIteration:
           img[i-1][j-1][0] = 0
-          return img
+          return img, 'img'
 
 def decode_image(img_loc):
   img = get_image(img_loc)
@@ -40,4 +40,14 @@ def decode_image(img_loc):
         if img[i-1][j-1][0] != 0:
           message = message + chr(img[i-1][j-1][0])
         else:
-          return bytes(message, 'utf-8')
+          return message.encode('utf-8')
+
+def encode_rsa(message):
+  publicKey, privateKey = rsa.newkeys(512)
+  secret_message = rsa.encrypt(message.encode('utf-8'), publicKey)
+  return secret_message, 'rsa', privateKey
+
+
+def decode_rsa(message, privatekey):
+  output = rsa.decrypt(message, privatekey).decode('utf-8')
+  return output
