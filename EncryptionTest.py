@@ -1,17 +1,27 @@
+from numpy import rec
 import rsa
-import encrytionModule
+import security
 import cv2
 
 
-file_location = "encimg1.png"
-message = 'Hello my name is Hamza'
-print(message)
-publicKey, privateKey = rsa.newkeys(512)
-message = rsa.encrypt(message.encode('utf-8'), publicKey)
-print(message)
-print(str(message))
-encoded_image, type = encrytionModule.encode_image(file_location, str(message))
-cv2.imwrite("EncodedImage.png", encoded_image)
-bingbong = encrytionModule.decode_image('EncodedImage.png')
-output = rsa.decrypt(bingbong, privateKey).decode('utf-8')
-print(output)
+# file_location = "encimg1.png"
+# message = 'Hello my name is Hamza'
+# print(message)
+# secretmessage, enc_type, key = security.encode_rsa(message)
+# print(secretmessage)
+# receivedmessage = security.decode_rsa(secretmessage, key)
+# print(receivedmessage)
+
+# encrypted_image, enc_type = security.encode_image(image_location=file_location, msg=message)
+# receivedmessage = security.decode_image(encrypted_image)
+# print(receivedmessage)
+message = 'Hello im all encrpted so cool'
+enc_type, secretmessage, key, encrypted_image = security.encode_random(message)
+print(f'Encoding Type: {enc_type}\nMessage: {secretmessage}\nKey: {key}\nImage: {encrypted_image}')
+received = security.decode_random(enc_type=enc_type, secret_message=secretmessage, key=key, encrypted_image=encrypted_image)
+print(received)
+
+
+
+
+
