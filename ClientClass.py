@@ -31,9 +31,9 @@ class Client:
                     pass
                 if serv_mess:
                     serv_mess = pickle.loads(serv_mess)
-                    recv_user, recv_mess, enc_type, key, encrypted_image, image_data = serv_mess.unpack()
-                    if image_data:
-                        cv2.imwrite(encrypted_image, image_data)
+                    recv_user, recv_mess, enc_type, key, encrypted_image = serv_mess.unpack()
+                    # if image_data:
+                    #     cv2.imwrite(encrypted_image, image_data)
                     recv_mess = security.decode_random(enc_type=enc_type, secret_message=recv_mess, key=key, encrypted_image=encrypted_image)
                     print( '\r' + recv_user + ': ' + recv_mess + ( ' ' * 50 ) + '\n' + 'Enter your message: ' , end = '' , flush = True )
                 if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
@@ -45,8 +45,8 @@ class Client:
                         mess += c
                         sleep(.001)
                 if mess_is_ready_to_send:
-                    enc_type, secretmessage, key, encrypted_image, image_data = security.encode_random(mess)
-                    mess_obj = Message(username, secretmessage, enc_type, key, encrypted_image, img_data=image_data)
+                    enc_type, secretmessage, key, encrypted_image = security.encode_random(mess)
+                    mess_obj = Message(username, secretmessage, enc_type, key, encrypted_image)
                     out_mess = pickle.dumps(mess_obj)
                     sock.send(out_mess)
                     if mess == 'stop':
@@ -54,4 +54,3 @@ class Client:
                     mess = str()
                     mess_is_ready_to_send = False
                     print('Enter your message: ' , end = '' , flush = True )
-

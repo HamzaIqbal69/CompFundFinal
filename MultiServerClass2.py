@@ -32,13 +32,13 @@ class multiServer:
                 if not raw_data:
                     break
                 data = pickle.loads(raw_data)
-                client_user, client_mess, enc_type, key, encrypted_image, image_data = data.unpack()
-                if image_data:
-                    cv2.imwrite(encrypted_image, image_data)
+                client_user, client_mess, enc_type, key, encrypted_image = data.unpack()
+                # if image_data:
+                #     cv2.imwrite(encrypted_image, image_data)
                 client_mess = security.decode_random(enc_type=enc_type, secret_message=client_mess, key=key, encrypted_image=encrypted_image)
                 print(f'Received {client_mess} from {client_user}')
-                enc_type, client_mess, key, encrypted_image, image_data = security.encode_random(client_mess)
-                newData = Message(client_user, client_mess, enc_type, key, encrypted_image, image_data)
+                enc_type, client_mess, key, encrypted_image = security.encode_random(client_mess)
+                newData = Message(client_user, client_mess, enc_type, key, encrypted_image)
                 newData = pickle.dumps(newData)
                 #print(self.connlst)
                 for i in self.connlst:
