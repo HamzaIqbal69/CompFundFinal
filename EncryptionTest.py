@@ -20,8 +20,3 @@ enc_type, secretmessage, key, encrypted_image = security.encode_random(message)
 print(f'Encoding Type: {enc_type}\nMessage: {secretmessage}\nKey: {key}\nImage: {encrypted_image}')
 received = security.decode_random(enc_type=enc_type, secret_message=secretmessage, key=key, encrypted_image=encrypted_image)
 print(received)
-
-
-
-
-

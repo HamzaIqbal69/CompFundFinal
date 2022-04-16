@@ -55,27 +55,29 @@ def encode_image(image_location, msg):
   img = get_image(image_location)
   msg_gen = char_generator(msg)
   pattern = gcd(len(img), len(img[0]))
-  for i in range(len(img)):
-    for j in range(len(img[0])):
-      if (i+1 * j+1) % pattern == 0:
-        try:
-          img[i-1][j-1][0] = next(msg_gen)
-        except StopIteration:
-          img[i-1][j-1][0] = 0
-          cv2.imwrite("EncodedImage.png", img)
-          return 'EncodedImage.png', 'img'
+  if img:
+    for i in range(len(img)):
+      for j in range(len(img[0])):
+        if (i+1 * j+1) % pattern == 0:
+          try:
+            img[i-1][j-1][0] = next(msg_gen)
+          except StopIteration:
+            img[i-1][j-1][0] = 0
+            cv2.imwrite("EncodedImage.png", img)
+            return 'EncodedImage.png', 'img', img
 
 def decode_image(img_loc):
   img = get_image(img_loc)
   pattern = gcd(len(img), len(img[0]))
   message = ''
-  for i in range(len(img)):
-    for j in range(len(img[0])):
-      if (i-1 * j-1) % pattern == 0:
-        if img[i-1][j-1][0] != 0:
-          message = message + chr(img[i-1][j-1][0])
-        else:
-          return message
+  if img:
+    for i in range(len(img)):
+      for j in range(len(img[0])):
+        if (i-1 * j-1) % pattern == 0:
+          if img[i-1][j-1][0] != 0:
+            message = message + chr(img[i-1][j-1][0])
+          else:
+            return message
 
 def encode_rsa(message):
   publicKey, privateKey = rsa.newkeys(512)
@@ -91,14 +93,14 @@ def encode_random(message):
   enc_type = random.choice(enc_type_lst)
   if enc_type == 'rsa':
     secret_message, enc_type, key = encode_rsa(message)
-    return enc_type, secret_message, key, None
+    return enc_type, secret_message, key, None, None
   if enc_type == 'img':
     file_location = 'encimg1.png'
-    encrypted_image, enc_type = encode_image(image_location=file_location, msg=message)
-    return enc_type, None, None, encrypted_image
+    encrypted_image, enc_type, img_data = encode_image(image_location=file_location, msg=message)
+    return enc_type, None, None, encrypted_image, img_data
   if enc_type == 'custom':
     secret_message, enc_type = encode_custom(message)
-    return enc_type, secret_message, None, None
+    return enc_type, secret_message, None, None, None
 
 def decode_random(enc_type, secret_message, key, encrypted_image):
   if enc_type == 'rsa':
