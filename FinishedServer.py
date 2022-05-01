@@ -18,11 +18,11 @@ import FinishedSecurity
 
 # Class Declaration -----------------------------------------------------------
 
-class multiServer:
+class Server:
 
     # Function Definitions ----------------------------------------------------
 
-    def __init__(self, host='10.110.200.136', port=1234, buff=2048):
+    def __init__(self, host='0.0.0.0', port=1234, buff=2048):
         """
         This function initializes the multiServer object and sets default
         values for the host ip address, port number, and buffer size all
@@ -36,7 +36,7 @@ class multiServer:
         self.buff = buff
         self.connlst = []
 
-    def start(self):
+    def runServer(self):
         """
         This function starts and maintains the server, and is responsible 
         for managing the connections.  When a new user connects a new thread
@@ -77,9 +77,14 @@ class multiServer:
             # encoded, and then sent to all the connections in the list of connections
             data = pickle.loads(raw_data)
             client_user, client_mess, enc_type, key = data.unpack()
+            print(enc_type)
+            for i in range(5):
+                enc_type = FinishedSecurity.decode_custom(enc_type)
             client_mess = FinishedSecurity.decode_random(enc_type=enc_type, secret_message=client_mess, key=key)
             print(f'Received {client_mess} from {client_user}')
             enc_type, client_mess, key = FinishedSecurity.encode_random(client_mess)
+            for i in range(5):
+                enc_type = FinishedSecurity.encode_custom(enc_type)
             newData = HamzaMessage(client_user, client_mess, enc_type, key)
             newData = pickle.dumps(newData)
             for i in self.connlst:

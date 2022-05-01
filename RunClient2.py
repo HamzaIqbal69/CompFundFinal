@@ -1,4 +1,4 @@
 from FinishedClient import Client
 
 z = Client()
-z.start()
+z.runClient()

@@ -80,7 +80,7 @@ def encode_custom(message):
       coded_char = '@@@'
     
     coded_message += coded_char
-  return coded_message, 'custom'
+  return coded_message
 
 def decode_custom(message):
   """
@@ -112,7 +112,7 @@ def encode_Vig(message):
       num = (char_to_index[letter] + char_to_index[key[i]]) % len(chars_set)
       encoded += index_to_char[num]
       i += 1
-  return encoded, 'Vig', key
+  return encoded, key
 
 def decode_Vig(message, key):
   """
@@ -173,7 +173,7 @@ def encode_rsa(message):
   """
   publicKey, privateKey = rsa.newkeys(512)
   secret_message = rsa.encrypt(message.encode(), publicKey)
-  return secret_message, 'rsa', privateKey
+  return secret_message, privateKey
 
 def decode_rsa(message, privatekey):
   """
@@ -193,13 +193,13 @@ def encode_random(message):
   enc_type_lst = ['rsa', 'custom', 'Vig']
   enc_type = random.choice(enc_type_lst)
   if enc_type == 'rsa':
-    secret_message, enc_type, key = encode_rsa(message)
+    secret_message, key = encode_rsa(message)
     return enc_type, secret_message, key
   if enc_type == 'custom':
-    secret_message, enc_type = encode_custom(message)
+    secret_message = encode_custom(message)
     return enc_type, secret_message, None
   if enc_type == 'Vig':
-    secret_message, enc_type, key = encode_Vig(message)
+    secret_message, key = encode_Vig(message)
     return enc_type, secret_message, key
 
 def decode_random(enc_type, secret_message, key):

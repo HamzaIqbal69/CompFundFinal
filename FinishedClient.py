@@ -22,7 +22,7 @@ class Client:
 
     # Function Definitions -----------------------------------------------------------------
 
-    def __init__(self, host='10.110.200.136', port=1234, buff=2048):
+    def __init__(self, host='0.0.0.0', port=1234, buff=2048):
         """
         This function initializes all the variables we will need in the rest of our functions
         """
@@ -79,6 +79,8 @@ class Client:
         if serv_mess:
             serv_mess = pickle.loads(serv_mess)
             recv_user, recv_mess, enc_type, key = serv_mess.unpack()
+            for i in range(5):
+                enc_type = FinishedSecurity.decode_custom(enc_type)
             recv_mess = FinishedSecurity.decode_random(enc_type=enc_type, secret_message=recv_mess, key=key)
             self.output.insert(END, f'{recv_user}:  {recv_mess} \n')
         # Handling the case where a message is entered into the text box -------------------
@@ -88,13 +90,15 @@ class Client:
             messboi = self.message
             user = self.username
             enc_type, secretmessage, key = FinishedSecurity.encode_random(messboi)
+            for i in range(5):
+                enc_type = FinishedSecurity.encode_custom(enc_type)
             mess_obj = HamzaMessage(user, secretmessage, enc_type, key)
             out_mess = pickle.dumps(mess_obj)
             self.sock.send(out_mess)
             self.message = None
             self.mess_is_ready_to_send = False
         
-    def start(self):
+    def runClient(self):
         """
         This function connects the socket, sets up the GUI.
         It also calls the refresh function, which updates the GUI and 

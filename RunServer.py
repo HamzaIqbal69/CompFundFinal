@@ -1,4 +1,4 @@
-from FinishedServer import multiServer
+from FinishedServer import Server
 
-x = multiServer()
-x.start()
+x = Server()
+x.runServer()
